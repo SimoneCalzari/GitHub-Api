@@ -13,6 +13,7 @@ const baseUrl = "https://api.github.com";
 // contenitore card
 const cards = document.querySelector(".cards");
 
+// creazione card per repositories
 function createCardRepo(repo) {
   // col bootstrap
   const col = document.createElement("div");
@@ -63,6 +64,51 @@ function createCardRepo(repo) {
   return col;
 }
 
+// creazione card per user e organizzazioni
+function createCardUser(user) {
+  // col bootstrap
+  const col = document.createElement("div");
+  col.classList = "col-12 col-sm-6 col-md-4 col-lg-3 mb-3";
+  // card
+  const card = document.createElement("div");
+  card.classList = "h-100 bg-light border rounded-3 pt-3 d-flex flex-column";
+  card.classList.add(
+    `${user.type === "User" ? "border-success" : "border-danger"}`
+  );
+  // immagine
+  const img = document.createElement("img");
+  img.src = user.avatar_url;
+  img.classList =
+    "img-fluid rounded-circle w-50 border border-2 mb-3 align-self-center";
+  img.classList.add(
+    `${user.type === "User" ? "border-success" : "border-danger"}`
+  );
+  card.append(img);
+  //   titolo user/organizzazione
+  const h6 = document.createElement("h6");
+  h6.innerText = user.login;
+  h6.classList = "px-3 align-self-center";
+  card.append(h6);
+  //   user o organizzazione
+  const userOrganizzaztion = document.createElement("p");
+  userOrganizzaztion.innerText = "Profile: " + `${user.type}`;
+  userOrganizzaztion.classList = "px-3 align-self-center";
+  card.append(userOrganizzaztion);
+  //   link alla user
+  const link_user = document.createElement("a");
+  link_user.href = user.html_url;
+  link_user.innerHTML =
+    "Go to the profile " +
+    '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+  link_user.classList = "btn d-block rounded-top-0 mt-auto py-3";
+  link_user.classList.add(
+    `${user.type === "User" ? "btn-success" : "btn-danger"}`
+  );
+  card.append(link_user);
+  col.append(card);
+  return col;
+}
+// ricerca al click sul button
 button.addEventListener("click", function () {
   axios
     .get(`${baseUrl}/search/${select.value}`, {
@@ -75,7 +121,11 @@ button.addEventListener("click", function () {
       const results = response.data.items;
       cards.innerHTML = "";
       results.forEach((element) => {
-        cards.append(createCardRepo(element));
+        if (select.value === "repositories") {
+          cards.append(createCardRepo(element));
+        } else {
+          cards.append(createCardUser(element));
+        }
       });
     });
 });
