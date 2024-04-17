@@ -108,8 +108,34 @@ function createCardUser(user) {
   col.append(card);
   return col;
 }
+// creazione messaggio no risultati ricerca
+function noResults() {
+  const message = document.createElement("p");
+  message.innerHTML =
+    "Sorry, your research has produced no results " +
+    '<i class="fa-solid fa-face-sad-cry"></i>';
+  message.classList = "text-center fs-2";
+  cards.append(message);
+}
+
+// creazione messaggio avviso utente che deve inserire almeno tre caratteri di input
+function noValidInput() {
+  const message = document.createElement("p");
+  message.innerHTML =
+    "Sorry, your input should be 3 characters long at minimun " +
+    '<i class="fa-solid fa-triangle-exclamation"></i>';
+  message.classList = "text-center fs-2";
+  cards.append(message);
+}
+
 // ricerca al click sul button
 button.addEventListener("click", function () {
+  if (input.value.trim().length < 3) {
+    cards.innerHTML = "";
+    noValidInput();
+    input.value = "";
+    return;
+  }
   axios
     .get(`${baseUrl}/search/${select.value}`, {
       params: {
@@ -120,12 +146,16 @@ button.addEventListener("click", function () {
     .then((response) => {
       const results = response.data.items;
       cards.innerHTML = "";
-      results.forEach((element) => {
-        if (select.value === "repositories") {
-          cards.append(createCardRepo(element));
-        } else {
-          cards.append(createCardUser(element));
-        }
-      });
+      if (results.length > 0) {
+        results.forEach((element) => {
+          if (select.value === "repositories") {
+            cards.append(createCardRepo(element));
+          } else {
+            cards.append(createCardUser(element));
+          }
+        });
+      } else {
+        noResults();
+      }
     });
 });
