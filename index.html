@@ -28,8 +28,9 @@
   <body class="vh-100 overflow-hidden d-flex flex-column">
     <!-- HEADER -->
     <header class="py-3 bg-light">
-      <div class="container-fluid d-flex">
-        <h1 class="fs-3">GitHub Api</h1>
+      <div class="container-fluid d-flex align-items-center">
+        <h1 class="fs-3 d-none d-sm-block">GitHub Api</h1>
+        <i class="fa-brands fa-github fs-1 d-sm-none"></i>
         <div class="d-flex flex-grow-1 justify-content-center">
           <input
             type="text"
@@ -53,7 +54,7 @@
     <!-- /HEADER -->
     <!-- MAIN -->
     <main class="overflow-auto flex-grow-1">
-      <div class="container h-100">
+      <div class="container-fluid h-100">
         <!-- LOADER -->
         <div
           id="loader"

@@ -18,7 +18,7 @@ const baseUrl = "https://api.github.com";
 function createCardRepo(repo) {
   // col bootstrap
   const col = document.createElement("div");
-  col.classList = "col-12 col-sm-6 col-md-4 col-lg-3 mb-3";
+  col.classList = "col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3";
   // card
   const card = document.createElement("div");
   card.classList =
@@ -60,6 +60,7 @@ function createCardRepo(repo) {
     "Go to the repo " +
     '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
   link_repo.classList = "btn btn-primary d-block rounded-top-0 mt-auto py-3";
+  link_repo.target = "_blank";
   card.append(link_repo);
   col.append(card);
   return col;
@@ -105,6 +106,7 @@ function createCardUser(user) {
   link_user.classList.add(
     `${user.type === "User" ? "btn-success" : "btn-danger"}`
   );
+  link_user.target = "_blank";
   card.append(link_user);
   col.append(card);
   return col;
@@ -128,6 +130,27 @@ function noValidInput() {
   message.classList = "text-center fs-2";
   cards.append(message);
 }
+// prima call al load per non avere pagina vuota
+function callOnLoad() {
+  loader.classList.remove("d-none");
+  axios
+    .get(`${baseUrl}/search/${select.value}`, {
+      params: {
+        q: "framework",
+        sort: "stars",
+        order: "desc",
+      },
+      headers: config,
+    })
+    .then((response) => {
+      const results = response.data.items;
+      results.forEach((element) => {
+        cards.append(createCardRepo(element));
+        loader.classList.add("d-none");
+      });
+    });
+}
+callOnLoad();
 
 // ricerca al click sul button
 button.addEventListener("click", function () {
