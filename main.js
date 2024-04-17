@@ -25,7 +25,12 @@ button.addEventListener("click", function () {
       ul.innerHTML = "";
       results.forEach((element) => {
         const li = document.createElement("li");
-        li.innerText = element.name;
+        if (select.value === "repositories") {
+          li.innerText = element.name;
+        } else {
+          li.innerText = element.login;
+        }
+
         ul.append(li);
       });
     });
