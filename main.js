@@ -18,7 +18,7 @@ const baseUrl = "https://api.github.com";
 function createCardRepo(repo) {
   // col bootstrap
   const col = document.createElement("div");
-  col.classList = "col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-3";
+  col.classList = "col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 mb-3";
   // card
   const card = document.createElement("div");
   card.classList =
@@ -70,7 +70,7 @@ function createCardRepo(repo) {
 function createCardUser(user) {
   // col bootstrap
   const col = document.createElement("div");
-  col.classList = "col-12 col-sm-6 col-md-4 col-lg-3 mb-3";
+  col.classList = "col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 mb-3";
   // card
   const card = document.createElement("div");
   card.classList = "h-100 bg-light border rounded-3 pt-3 d-flex flex-column";
