@@ -6,12 +6,13 @@ const input = document.getElementById("input-text");
 const select = document.getElementById("select-type");
 // button ricerca
 const button = document.getElementById("button-search");
+// contenitore card
+const cards = document.querySelector(".cards");
+// loader
+const loader = document.getElementById("loader");
 
 // url base api github
 const baseUrl = "https://api.github.com";
-
-// contenitore card
-const cards = document.querySelector(".cards");
 
 // creazione card per repositories
 function createCardRepo(repo) {
@@ -136,6 +137,8 @@ button.addEventListener("click", function () {
     input.value = "";
     return;
   }
+  // mostro loader
+  loader.classList.remove("d-none");
   axios
     .get(`${baseUrl}/search/${select.value}`, {
       params: {
@@ -157,5 +160,7 @@ button.addEventListener("click", function () {
       } else {
         noResults();
       }
+      // nascondo loader
+      loader.classList.add("d-none");
     });
 });
