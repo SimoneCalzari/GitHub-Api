@@ -130,6 +130,48 @@ function noValidInput() {
   message.classList = "text-center fs-2";
   cards.append(message);
 }
+
+// debouncer function
+function debounce(delay) {
+  let timer;
+  return function () {
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      if (input.value.trim().length < 3) {
+        cards.innerHTML = "";
+        noValidInput();
+        // input.value = "";
+        return;
+      }
+      // mostro loader
+      loader.classList.remove("d-none");
+      axios
+        .get(`${baseUrl}/search/${select.value}`, {
+          params: {
+            q: input.value,
+          },
+          headers: config,
+        })
+        .then((response) => {
+          const results = response.data.items;
+          cards.innerHTML = "";
+          if (results.length > 0) {
+            results.forEach((element) => {
+              if (select.value === "repositories") {
+                cards.append(createCardRepo(element));
+              } else {
+                cards.append(createCardUser(element));
+              }
+            });
+          } else {
+            noResults();
+          }
+          // nascondo loader
+          loader.classList.add("d-none");
+        });
+    }, delay);
+  };
+}
 // prima call al load per non avere pagina vuota
 function callOnLoad() {
   loader.classList.remove("d-none");
@@ -157,7 +199,7 @@ button.addEventListener("click", function () {
   if (input.value.trim().length < 3) {
     cards.innerHTML = "";
     noValidInput();
-    input.value = "";
+    // input.value = "";
     return;
   }
   // mostro loader
@@ -187,3 +229,6 @@ button.addEventListener("click", function () {
       loader.classList.add("d-none");
     });
 });
+
+// debouncer su input testo
+input.addEventListener("input", debounce(700));
