@@ -1,3 +1,20 @@
 #input-text {
   outline: none;
 }
+
+#back-to-top {
+  display: inline-block;
+  background-color: black;
+  color: white;
+  width: 50px;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  text-align: center;
+  line-height: 50px;
+  vertical-align: middle;
+  font-size: 30px;
+  position: absolute;
+  bottom: 15px;
+  right: 40px;
+  cursor: pointer;
+}

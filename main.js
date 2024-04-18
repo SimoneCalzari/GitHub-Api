@@ -35,6 +35,8 @@ const spanPage = document.getElementById("current-page");
 const spanPages = document.getElementById("total-pages");
 // span con numero di risultati totali
 const spanResults = document.getElementById("total-results");
+// button back to top
+const backTop = document.getElementById("back-to-top");
 
 /*
  *
@@ -287,4 +289,11 @@ next_btn.addEventListener("click", () => {
 // pagina precedente
 prev_btn.addEventListener("click", () => {
   changePage(-1, 1);
+});
+// back to top
+backTop.addEventListener("click", function () {
+  document.querySelector("main").scroll({
+    top: 0,
+    behavior: "smooth",
+  });
 });

@@ -28,12 +28,14 @@
   <body class="vh-100 overflow-hidden d-flex flex-column">
     <!-- HEADER -->
     <header class="py-3 bg-light">
-      <div class="container-fluid d-flex align-items-center">
+      <div
+        class="container-fluid d-flex justify-content-between align-items-center"
+      >
         <a href="/" class="text-dark d-flex text-decoration-none">
           <h1 class="fs-3 d-none d-md-block">GitHub Api</h1>
           <i class="fa-brands fa-github fs-1 ms-md-2"></i>
         </a>
-        <div class="d-flex flex-grow-1 justify-content-center">
+        <div class="d-flex justify-content-center">
           <input
             type="text"
             class="border border-dark rounded-end-0 rounded-start-2 ps-2"
@@ -83,7 +85,14 @@
           ></div>
         </div>
         <!-- /LOADER -->
+        <!-- CARDS CONTAINER -->
         <div class="cards row py-4"></div>
+        <!-- /CARDS CONTAINER -->
+        <!-- BACK TO TOP BUTTON -->
+        <div id="back-to-top">
+          <i class="fa-solid fa-arrow-up"></i>
+        </div>
+        <!-- /BACK TO TOP BUTTON -->
       </div>
     </main>
     <!-- /MAIN -->
