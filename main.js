@@ -1,5 +1,12 @@
 "use strict";
 
+/*
+ *
+ *
+ * ELEMENTI USATI IN TUTTO LO SCRIPT
+ *
+ *
+ */
 // input testo
 const input = document.getElementById("input-text");
 // select
@@ -10,10 +17,26 @@ const button = document.getElementById("button-search");
 const cards = document.querySelector(".cards");
 // loader
 const loader = document.getElementById("loader");
-
+// contenitore paginazione
+const pagination = document.getElementById("pagination");
+// next button paginazione
+const next_btn = document.getElementById("next");
+// prev button paginazione
+const prev_btn = document.getElementById("prev");
 // url base api github
 const baseUrl = "https://api.github.com";
+// pagina corrente
+let currentPage = 1;
+// numero di pagine
+let totalPages = 1;
 
+/*
+ *
+ *
+ * FUNZIONI PER LA LOGICA
+ *
+ *
+ */
 // creazione card per repositories
 function createCardRepo(repo) {
   // col bootstrap
@@ -65,7 +88,6 @@ function createCardRepo(repo) {
   col.append(card);
   return col;
 }
-
 // creazione card per user e organizzazioni
 function createCardUser(user) {
   // col bootstrap
@@ -120,7 +142,6 @@ function noResults() {
   message.classList = "text-center fs-2";
   cards.append(message);
 }
-
 // creazione messaggio avviso utente che deve inserire almeno tre caratteri di input
 function noValidInput() {
   const message = document.createElement("p");
@@ -130,46 +151,56 @@ function noValidInput() {
   message.classList = "text-center fs-2";
   cards.append(message);
 }
-
+// ricerca più rendering dati in pagina
+function searchCall() {
+  if (input.value.trim().length < 3) {
+    pagination.classList.add("d-none");
+    cards.innerHTML = "";
+    noValidInput();
+    // input.value = "";
+    return;
+  }
+  pagination.classList.add("d-none");
+  cards.innerHTML = "";
+  // mostro loader
+  loader.classList.remove("d-none");
+  axios
+    .get(`${baseUrl}/search/${select.value}`, {
+      params: {
+        q: input.value,
+      },
+      headers: config,
+    })
+    .then((response) => {
+      const results = response.data.items;
+      if (results.length > 0) {
+        // calcolo pagine totali per la ricerca corrente
+        totalPages = setPages(response.data.total_count);
+        // setto la pagina corrente a 1
+        currentPage = 1;
+        results.forEach((element) => {
+          if (select.value === "repositories") {
+            cards.append(createCardRepo(element));
+          } else {
+            cards.append(createCardUser(element));
+          }
+        });
+      } else {
+        noResults();
+        totalPages = 0;
+      }
+      // mostro bottoni più o meno solo se ho almeno due pagine
+      if (totalPages > 1) pagination.classList.remove("d-none");
+      // nascondo loader
+      loader.classList.add("d-none");
+    });
+}
 // debouncer function
 function debounce(delay) {
   let timer;
   return function () {
     clearTimeout(timer);
-    timer = setTimeout(function () {
-      if (input.value.trim().length < 3) {
-        cards.innerHTML = "";
-        noValidInput();
-        // input.value = "";
-        return;
-      }
-      // mostro loader
-      loader.classList.remove("d-none");
-      axios
-        .get(`${baseUrl}/search/${select.value}`, {
-          params: {
-            q: input.value,
-          },
-          headers: config,
-        })
-        .then((response) => {
-          const results = response.data.items;
-          cards.innerHTML = "";
-          if (results.length > 0) {
-            results.forEach((element) => {
-              if (select.value === "repositories") {
-                cards.append(createCardRepo(element));
-              } else {
-                cards.append(createCardUser(element));
-              }
-            });
-          } else {
-            noResults();
-          }
-          // nascondo loader
-          loader.classList.add("d-none");
-        });
-    }, delay);
+    timer = setTimeout(searchCall, delay);
   };
 }
 // prima call al load per non avere pagina vuota
@@ -192,43 +223,54 @@ function callOnLoad() {
       });
     });
 }
-callOnLoad();
-
-// ricerca al click sul button
-button.addEventListener("click", function () {
-  if (input.value.trim().length < 3) {
-    cards.innerHTML = "";
-    noValidInput();
-    // input.value = "";
-    return;
-  }
-  // mostro loader
+// calcolo numero pagine totali
+function setPages(items) {
+  return Math.ceil(items / 30);
+}
+// cambio pagina
+function changePage(plusMinus, limit) {
+  if (currentPage === limit) return;
+  currentPage = currentPage + plusMinus;
+  cards.innerHTML = "";
   loader.classList.remove("d-none");
   axios
     .get(`${baseUrl}/search/${select.value}`, {
       params: {
         q: input.value,
+        page: currentPage,
       },
       headers: config,
     })
     .then((response) => {
       const results = response.data.items;
-      cards.innerHTML = "";
-      if (results.length > 0) {
-        results.forEach((element) => {
-          if (select.value === "repositories") {
-            cards.append(createCardRepo(element));
-          } else {
-            cards.append(createCardUser(element));
-          }
-        });
-      } else {
-        noResults();
-      }
-      // nascondo loader
+      results.forEach((element) => {
+        if (select.value === "repositories") {
+          cards.append(createCardRepo(element));
+        } else {
+          cards.append(createCardUser(element));
+        }
+      });
       loader.classList.add("d-none");
     });
-});
-
+}
+/*
+ *
+ *
+ * ESECUZIONE LOGICA DEFINITA SOPRA
+ *
+ *
+ */
+// chiamata al load della pagina
+callOnLoad();
+// ricerca al click sul button
+button.addEventListener("click", searchCall);
 // debouncer su input testo
 input.addEventListener("input", debounce(700));
+// prossima pagina
+next_btn.addEventListener("click", () => {
+  changePage(1, totalPages);
+});
+// pagina precedente
+prev_btn.addEventListener("click", () => {
+  changePage(-1, 1);
+});

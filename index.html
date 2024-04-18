@@ -55,13 +55,19 @@
     <!-- MAIN -->
     <main class="overflow-auto flex-grow-1">
       <div class="container-fluid h-100">
+        <!-- PAGINATION -->
+        <div id="pagination" class="d-flex justify-content-between pt-4 d-none">
+          <div id="prev" class="btn btn-dark">Previous</div>
+          <div id="next" class="btn btn-dark">Next</div>
+        </div>
+        <!-- /PAGINATION -->
         <!-- LOADER -->
         <div
           id="loader"
-          class="h-100 d-flex justify-content-center align-items-center d-none"
+          class="h-75 d-flex justify-content-center align-items-center d-none"
         >
           <div
-            class="spinner-border text-secondary"
+            class="spinner-border text-dark"
             style="width: 8vw; height: 8vw"
             role="status"
           ></div>
