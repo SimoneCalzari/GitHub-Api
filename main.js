@@ -29,6 +29,12 @@ const baseUrl = "https://api.github.com";
 let currentPage = 1;
 // numero di pagine
 let totalPages = 1;
+// span con numero di pagina corrente
+const spanPage = document.getElementById("current-page");
+// span con numero di pagine totali
+const spanPages = document.getElementById("total-pages");
+// span con numero di risultati totali
+const spanResults = document.getElementById("total-results");
 
 /*
  *
@@ -55,7 +61,7 @@ function createCardRepo(repo) {
   //   titolo repo
   const h6 = document.createElement("h6");
   h6.innerText = repo.full_name;
-  h6.classList = "px-3 align-self-center";
+  h6.classList = "px-3 align-self-center text-break";
   card.append(h6);
   //   descrizione
   const description = document.createElement("p");
@@ -111,7 +117,7 @@ function createCardUser(user) {
   //   titolo user/organizzazione
   const h6 = document.createElement("h6");
   h6.innerText = user.login;
-  h6.classList = "px-3 align-self-center";
+  h6.classList = "px-3 align-self-center text-break";
   card.append(h6);
   //   user o organizzazione
   const userOrganizzaztion = document.createElement("p");
@@ -176,8 +182,12 @@ function searchCall() {
       if (results.length > 0) {
         // calcolo pagine totali per la ricerca corrente
         totalPages = setPages(response.data.total_count);
+        spanPages.innerHTML = totalPages;
         // setto la pagina corrente a 1
         currentPage = 1;
+        spanPage.innerHTML = currentPage;
+        // risultati totali ricerca
+        spanResults.innerHTML = response.data.total_count;
         results.forEach((element) => {
           if (select.value === "repositories") {
             cards.append(createCardRepo(element));
@@ -189,8 +199,11 @@ function searchCall() {
         noResults();
         totalPages = 0;
       }
-      // mostro bottoni più o meno solo se ho almeno due pagine
-      if (totalPages > 1) pagination.classList.remove("d-none");
+
+      if (totalPages > 1) {
+        // mostro bottoni più o meno solo se ho almeno due pagine
+        pagination.classList.remove("d-none");
+      }
       // nascondo loader
       loader.classList.add("d-none");
     });
@@ -231,6 +244,7 @@ function setPages(items) {
 function changePage(plusMinus, limit) {
   if (currentPage === limit) return;
   currentPage = currentPage + plusMinus;
+  spanPage.innerHTML = currentPage;
   cards.innerHTML = "";
   loader.classList.remove("d-none");
   axios

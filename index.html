@@ -29,8 +29,10 @@
     <!-- HEADER -->
     <header class="py-3 bg-light">
       <div class="container-fluid d-flex align-items-center">
-        <h1 class="fs-3 d-none d-md-block">GitHub Api</h1>
-        <i class="fa-brands fa-github fs-1 ms-md-2"></i>
+        <a href="/" class="text-dark d-flex text-decoration-none">
+          <h1 class="fs-3 d-none d-md-block">GitHub Api</h1>
+          <i class="fa-brands fa-github fs-1 ms-md-2"></i>
+        </a>
         <div class="d-flex flex-grow-1 justify-content-center">
           <input
             type="text"
@@ -56,8 +58,16 @@
     <main class="overflow-auto flex-grow-1">
       <div class="container-fluid h-100">
         <!-- PAGINATION -->
-        <div id="pagination" class="d-flex justify-content-between pt-4 d-none">
+        <div
+          id="pagination"
+          class="d-flex justify-content-center align-items-center pt-4 d-none gap-3"
+        >
           <div id="prev" class="btn btn-dark">Previous</div>
+          <p class="fs-3 fw-bold mb-0">
+            Total results <span id="total-results"></span> - Page
+            <span id="current-page"></span> of
+            <span id="total-pages"></span>
+          </p>
           <div id="next" class="btn btn-dark">Next</div>
         </div>
         <!-- /PAGINATION -->
